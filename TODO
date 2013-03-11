@@ -1,0 +1,9 @@
+* Unit tests
+* Auto-download apktool.jar
+* Test on Windows
+
+
+Contacts:
+  * Create subclass of CursorLoader.
+  * Handle insert/delete/update for contacts
+

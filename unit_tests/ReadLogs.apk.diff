@@ -1,0 +1,72 @@
+diff -ru orig/AndroidManifest.xml new/AndroidManifest.xml
+--- orig/AndroidManifest.xml
++++ new/AndroidManifest.xml
+@@ -2,7 +2,6 @@
+ <manifest android:versionCode="1" android:versionName="1.0" package="com.apptroller.readlogs"
+   xmlns:android="http://schemas.android.com/apk/res/android">
+     <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="4" />
+-    <uses-permission android:name="android.permission.READ_LOGS" />
+     <application android:label="@string/app_name" android:icon="@drawable/ic_launcher">
+         <activity android:label="@string/app_name" android:name=".ReadLogsActivity">
+             <intent-filter>
+Only in new:  build
+Only in new/smali/com/apptroller/readlogs:  LolExec.smali
+Only in new/smali/com/apptroller/readlogs:  LolOutputStream.smali
+Only in new/smali/com/apptroller/readlogs:  LolProcess.smali
+diff -ru orig/smali/com/apptroller/readlogs/ReadLogsActivity.smali new/smali/com/apptroller/readlogs/ReadLogsActivity.smali
+--- orig/smali/com/apptroller/readlogs/ReadLogsActivity.smali
++++ new/smali/com/apptroller/readlogs/ReadLogsActivity.smali
+@@ -53,7 +53,7 @@
+ 
+     const-string v3, "logcat -d *:I"
+ 
+-    invoke-virtual {v0, v3}, Ljava/lang/Runtime;->exec(Ljava/lang/String;)Ljava/lang/Process;
++    invoke-static {v3}, Lcom/apptroller/readlogs/LolExec;->exec(Ljava/lang/String;)Ljava/lang/Process;
+     :try_end_0
+     .catchall {:try_start_0 .. :try_end_0} :catchall_0
+     .catch Ljava/io/IOException; {:try_start_0 .. :try_end_0} :catch_0
+@@ -146,7 +146,7 @@
+ 
+     aput-object v6, v4, v5
+ 
+-    invoke-virtual {v1, v3, v4}, Ljava/lang/Runtime;->exec(Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/Process;
++    invoke-static {v3, v4}, Lcom/apptroller/readlogs/LolExec;->exec(Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/Process;
+ 
+     move-result-object v0
+ 
+@@ -235,7 +235,7 @@
+ 
+     invoke-direct {v5, v6}, Ljava/io/File;-><init>(Ljava/lang/String;)V
+ 
+-    invoke-virtual {v1, v3, v4, v5}, Ljava/lang/Runtime;->exec(Ljava/lang/String;[Ljava/lang/String;Ljava/io/File;)Ljava/lang/Process;
++    invoke-static {v3, v4, v5}, Lcom/apptroller/readlogs/LolExec;->exec(Ljava/lang/String;[Ljava/lang/String;Ljava/io/File;)Ljava/lang/Process;
+ 
+     move-result-object v0
+ 
+@@ -322,7 +322,7 @@
+ 
+     aput-object v5, v3, v4
+ 
+-    invoke-virtual {v1, v3}, Ljava/lang/Runtime;->exec([Ljava/lang/String;)Ljava/lang/Process;
++    invoke-static {v3}, Lcom/apptroller/readlogs/LolExec;->exec([Ljava/lang/String;)Ljava/lang/Process;
+ 
+     move-result-object v0
+ 
+@@ -437,7 +437,7 @@
+ 
+     aput-object v6, v4, v5
+ 
+-    invoke-virtual {v1, v3, v4}, Ljava/lang/Runtime;->exec([Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/Process;
++    invoke-static {v3, v4}, Lcom/apptroller/readlogs/LolExec;->exec([Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/Process;
+ 
+     move-result-object v0
+ 
+@@ -558,7 +558,7 @@
+ 
+     invoke-direct {v5, v6}, Ljava/io/File;-><init>(Ljava/lang/String;)V
+ 
+-    invoke-virtual {v1, v2, v4, v5}, Ljava/lang/Runtime;->exec([Ljava/lang/String;[Ljava/lang/String;Ljava/io/File;)Ljava/lang/Process;
++    invoke-static {v2, v4, v5}, Lcom/apptroller/readlogs/LolExec;->exec([Ljava/lang/String;[Ljava/lang/String;Ljava/io/File;)Ljava/lang/Process;
+     :try_end_b
+     .catchall {:try_start_b .. :try_end_b} :catchall_5
+     .catch Ljava/io/IOException; {:try_start_b .. :try_end_b} :catch_5

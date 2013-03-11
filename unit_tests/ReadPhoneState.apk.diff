@@ -1,0 +1,100 @@
+diff -ru orig/AndroidManifest.xml new/AndroidManifest.xml
+--- orig/AndroidManifest.xml
++++ new/AndroidManifest.xml
+@@ -2,7 +2,6 @@
+ <manifest android:versionCode="1" android:versionName="1.0" package="com.apptroller.readphonestate"
+   xmlns:android="http://schemas.android.com/apk/res/android">
+     <uses-sdk android:minSdkVersion="4" />
+-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+     <application android:label="@string/app_name" android:icon="@drawable/ic_launcher">
+         <activity android:label="@string/app_name" android:name=".ReadPhoneStateActivity">
+             <intent-filter>
+Only in new:  build
+diff -ru orig/smali/com/apptroller/readphonestate/ReadPhoneStateActivity.smali new/smali/com/apptroller/readphonestate/ReadPhoneStateActivity.smali
+--- orig/smali/com/apptroller/readphonestate/ReadPhoneStateActivity.smali
++++ new/smali/com/apptroller/readphonestate/ReadPhoneStateActivity.smali
+@@ -44,7 +44,6 @@
+ 
+     const/16 v2, 0x20
+ 
+-    invoke-virtual {v0, v1, v2}, Landroid/telephony/TelephonyManager;->listen(Landroid/telephony/PhoneStateListener;I)V
+ 
+     const-string v1, ""
+ 
+@@ -62,9 +61,8 @@
+ 
+     move-result-object v1
+ 
+-    invoke-virtual {v0}, Landroid/telephony/TelephonyManager;->getDeviceId()Ljava/lang/String;
+ 
+-    move-result-object v2
++    const-string v2, "0123456789abcdef"
+ 
+     invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+ 
+@@ -94,9 +92,8 @@
+ 
+     move-result-object v1
+ 
+-    invoke-virtual {v0}, Landroid/telephony/TelephonyManager;->getDeviceSoftwareVersion()Ljava/lang/String;
+ 
+-    move-result-object v2
++    const-string v2, "99999"
+ 
+     invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+ 
+@@ -126,9 +123,8 @@
+ 
+     move-result-object v1
+ 
+-    invoke-virtual {v0}, Landroid/telephony/TelephonyManager;->getLine1Number()Ljava/lang/String;
+ 
+-    move-result-object v2
++    const-string v2, "11231234567"
+ 
+     invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+ 
+@@ -158,9 +154,8 @@
+ 
+     move-result-object v1
+ 
+-    invoke-virtual {v0}, Landroid/telephony/TelephonyManager;->getSimSerialNumber()Ljava/lang/String;
+ 
+-    move-result-object v2
++    const-string v2, "ABCDEFGabcdefg01234567890"
+ 
+     invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+ 
+@@ -190,9 +185,8 @@
+ 
+     move-result-object v1
+ 
+-    invoke-virtual {v0}, Landroid/telephony/TelephonyManager;->getSubscriberId()Ljava/lang/String;
+ 
+-    move-result-object v2
++    const-string v2, "1122334455667788"
+ 
+     invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+ 
+@@ -222,9 +216,8 @@
+ 
+     move-result-object v1
+ 
+-    invoke-virtual {v0}, Landroid/telephony/TelephonyManager;->getVoiceMailAlphaTag()Ljava/lang/String;
+ 
+-    move-result-object v2
++    const-string v2, "Stuff"
+ 
+     invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+ 
+@@ -254,9 +247,8 @@
+ 
+     move-result-object v1
+ 
+-    invoke-virtual {v0}, Landroid/telephony/TelephonyManager;->getVoiceMailNumber()Ljava/lang/String;
+ 
+-    move-result-object v0
++    const-string v0, "7"
+ 
+     invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+ 

@@ -1,0 +1,64 @@
+diff -ru orig/AndroidManifest.xml new/AndroidManifest.xml
+--- orig/AndroidManifest.xml
++++ new/AndroidManifest.xml
+@@ -2,7 +2,6 @@
+ <manifest android:versionCode="1" android:versionName="1.0" package="com.apptroller.dynamicpermissioncheck"
+   xmlns:android="http://schemas.android.com/apk/res/android">
+     <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="4" />
+-    <uses-permission android:name="android.permission.READ_LOGS" />
+     <application android:label="@string/app_name" android:icon="@drawable/ic_launcher">
+         <activity android:label="@string/app_name" android:name=".DynamicPermissionCheckActivity">
+             <intent-filter>
+Only in new:  build
+diff -ru orig/smali/com/apptroller/dynamicpermissioncheck/a.smali new/smali/com/apptroller/dynamicpermissioncheck/a.smali
+--- orig/smali/com/apptroller/dynamicpermissioncheck/a.smali
++++ new/smali/com/apptroller/dynamicpermissioncheck/a.smali
+@@ -26,7 +26,7 @@
+ 
+     const-string v1, "android.permission.RECEIVE_SMS"
+ 
+-    invoke-virtual {v0, v1}, Landroid/app/Activity;->checkCallingOrSelfPermission(Ljava/lang/String;)I
++    invoke-static {v0, v1}, Lcom/apptroller/dynamicpermissioncheck/LolPermissionChecker;->checkOnActivity(Landroid/app/Activity;Ljava/lang/String;)I
+ 
+     move-result v0
+ 
+diff -ru orig/smali/com/apptroller/dynamicpermissioncheck/DynamicPermissionCheckActivity.smali new/smali/com/apptroller/dynamicpermissioncheck/DynamicPermissionCheckActivity.smali
+--- orig/smali/com/apptroller/dynamicpermissioncheck/DynamicPermissionCheckActivity.smali
++++ new/smali/com/apptroller/dynamicpermissioncheck/DynamicPermissionCheckActivity.smali
+@@ -22,7 +22,7 @@
+ 
+     const-string v1, "android.permission.READ_PHONE_STATE"
+ 
+-    invoke-virtual {p0, v1}, Lcom/apptroller/dynamicpermissioncheck/DynamicPermissionCheckActivity;->checkCallingOrSelfPermission(Ljava/lang/String;)I
++    invoke-static {p0, v1}, Lcom/apptroller/dynamicpermissioncheck/LolPermissionChecker;->checkOnActivity(Landroid/app/Activity;Ljava/lang/String;)I
+ 
+     move-result v1
+ 
+@@ -71,7 +71,7 @@
+ 
+     const-string v2, "android.permission.READ_PHONE_STATE"
+ 
+-    invoke-virtual {v1, v2}, Landroid/content/Context;->checkCallingOrSelfPermission(Ljava/lang/String;)I
++    invoke-static {v1, v2}, Lcom/apptroller/dynamicpermissioncheck/LolPermissionChecker;->checkOnContext(Landroid/content/Context;Ljava/lang/String;)I
+ 
+     move-result v1
+ 
+@@ -116,7 +116,7 @@
+ 
+     const-string v1, "android.permission.READ_LOGS"
+ 
+-    invoke-virtual {p0, v1}, Lcom/apptroller/dynamicpermissioncheck/DynamicPermissionCheckActivity;->checkCallingOrSelfPermission(Ljava/lang/String;)I
++    invoke-static {p0, v1}, Lcom/apptroller/dynamicpermissioncheck/LolPermissionChecker;->checkOnActivity(Landroid/app/Activity;Ljava/lang/String;)I
+ 
+     move-result v1
+ 
+@@ -161,7 +161,7 @@
+ 
+     const-string v1, "android.permission.SEND_SMS"
+ 
+-    invoke-virtual {p0, v1}, Lcom/apptroller/dynamicpermissioncheck/DynamicPermissionCheckActivity;->checkCallingOrSelfPermission(Ljava/lang/String;)I
++    invoke-static {p0, v1}, Lcom/apptroller/dynamicpermissioncheck/LolPermissionChecker;->checkOnActivity(Landroid/app/Activity;Ljava/lang/String;)I
+ 
+     move-result v1
+ 
+Only in new/smali/com/apptroller/dynamicpermissioncheck:  LolPermissionChecker.smali

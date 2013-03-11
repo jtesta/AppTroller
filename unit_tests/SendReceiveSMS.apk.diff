@@ -1,0 +1,52 @@
+diff -ru orig/AndroidManifest.xml new/AndroidManifest.xml
+--- orig/AndroidManifest.xml
++++ new/AndroidManifest.xml
+@@ -2,8 +2,6 @@
+ <manifest android:versionCode="1" android:versionName="1.0" package="com.apptroller.sendreceivesms"
+   xmlns:android="http://schemas.android.com/apk/res/android">
+     <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="4" />
+-    <uses-permission android:name="android.permission.SEND_SMS" />
+-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+     <application android:label="@string/app_name" android:icon="@drawable/ic_launcher">
+         <activity android:label="@string/app_name" android:name="com.apptroller.sendreceivesms.SendReceiveSMSActivity">
+             <intent-filter>
+@@ -11,10 +9,6 @@
+                 <category android:name="android.intent.category.LAUNCHER" />
+             </intent-filter>
+         </activity>
+-        <receiver android:name="com.apptroller.sendreceivesms.SmsReceiver">
+-            <intent-filter>
+-                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+-            </intent-filter>
+-        </receiver>
++        
+     </application>
+ </manifest>
+Only in new:  build
+diff -ru orig/smali/com/apptroller/sendreceivesms/SendReceiveSMSActivity.smali new/smali/com/apptroller/sendreceivesms/SendReceiveSMSActivity.smali
+--- orig/smali/com/apptroller/sendreceivesms/SendReceiveSMSActivity.smali
++++ new/smali/com/apptroller/sendreceivesms/SendReceiveSMSActivity.smali
+@@ -187,7 +187,6 @@
+ 
+     move-object v5, v2
+ 
+-    invoke-virtual/range {v0 .. v5}, Landroid/telephony/SmsManager;->sendTextMessage(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Landroid/app/PendingIntent;Landroid/app/PendingIntent;)V
+ 
+     :cond_2
+     :goto_1
+@@ -218,7 +217,6 @@
+ 
+     move-object v6, v2
+ 
+-    invoke-virtual/range {v0 .. v6}, Landroid/telephony/SmsManager;->sendDataMessage(Ljava/lang/String;Ljava/lang/String;S[BLandroid/app/PendingIntent;Landroid/app/PendingIntent;)V
+ 
+     goto :goto_1
+ 
+@@ -247,7 +245,6 @@
+ 
+     move-object v5, v2
+ 
+-    invoke-virtual/range {v0 .. v5}, Landroid/telephony/SmsManager;->sendMultipartTextMessage(Ljava/lang/String;Ljava/lang/String;Ljava/util/ArrayList;Ljava/util/ArrayList;Ljava/util/ArrayList;)V
+ 
+     goto :goto_1
+ .end method
