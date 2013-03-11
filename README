@@ -15,26 +15,22 @@ application.  Root access is not necessary.  It is licensed under the
 GNU Public License version 2.
 
 
-Installation (for Ubuntu 12.04LTS):
+Installation (for Ubuntu 12.04LTS / Linux Mint 13LTS):
 
-   1.)  Download the latest version of apktool from:
-        <http://code.google.com/p/android-apktool/>.  Extract it, and place
-        'apktool.jar' in the same directory as AppTroller.py.
+   1.)  Install Python and Java:
+        # apt-get install python openjdk-7-jdk
 
    2.)  Install the Android SDK from:
-        <http://developer.android.com/sdk/index.html>.  Ensure the 'aapt' and
-        'zipalign' tools are in your PATH.
+        <http://developer.android.com/sdk/index.html>.  Ensure the 'aapt',
+        'keytool', 'jarsigner', and 'zipalign' tools are in your PATH by adding
+        the 'sdk/tools' and 'sdk/platform-tools' directories to your
+        PATH variable.
 
-        Hint:  once the 'android-sdk-linux.tgz' archive is unpacked, navigate
-        to the 'android-sdk-linux/tools' path and execute the 'android'
-        program.  Deselect all options except Tools->Android SDK Tools, and
-        click the 'Install 1 package' button.
-
-        Lastly, add the 'android-sdk-linux/tools' and
-        'android-sdk-linux/platform-tools' directories to your PATH.
-
-   3.)  Install Python and Java:
-        # apt-get install python openjdk-7-jdk
+   3.)  (Optional) Download the latest version of apktool from:
+        <http://code.google.com/p/android-apktool/>.  Extract it, and place
+        'apktool.jar' in the same directory as AppTroller.py.  If you don't
+        do this, you will be prompted to automatically download and install
+        apktool when you run AppTroller.py.
 
 
 Basic example:
@@ -61,4 +57,5 @@ sources, along with the diff file for manual analysis.
 
 ChangeLog:
 
+* v0.03:  ????:  ????
 * v0.02:  May 12, 2012:  Initial public release at BSides Rochester.
