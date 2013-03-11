@@ -6,7 +6,7 @@ This script trolls Android apps.  Hard.
 
 '''
 
-import getopt, os, random, re, shutil, string, struct, subprocess, sys, tempfile
+import getopt, hashlib, os, random, re, shutil, string, struct, subprocess, sys, tarfile, tempfile, urllib2
 from PostProcessor import *
 from ShimDynamicPermissionCheck import *
 from ShimExec import *
@@ -17,6 +17,10 @@ from ShimReflection import *
 
 APPTROLLER_VERSION = '0.03'
 APPTROLLER_DATE = 'January 3, 2013'
+
+APKTOOL_URL = 'https://android-apktool.googlecode.com/files/apktool1.5.2.tar.bz2'
+APKTOOL_HASH = '2dd828cf79467730c7406aa918f1da1bd21aaec8'
+
 
 neuteredPermissions = []
 functionToValueMap = {}
@@ -41,6 +45,76 @@ def d(msg):
 def v(msg):
     if verbose:
         print msg
+
+
+# Downloads apktool.jar and places it in the current directory.
+def getAPKTool():
+    print 'Downloading apktool...'
+
+    # Note that while the URL is HTTPS, urllib2 does not check the server's
+    # certificate, so its effectively the same as HTTP.  We will verify the
+    # archive hash manually below...
+    hArchive = urllib2.urlopen(APKTOOL_URL)
+    archive = hArchive.read()
+    hArchive.close()
+
+    # Calculate the SHA1 sum of the archive so we can compare it with the
+    # expected value.
+    h = hashlib.sha1()
+    h.update(archive)
+
+    archiveHash = h.hexdigest()
+    print "Done.  Downloaded SHA1 hash is %s. " % archiveHash
+    if archiveHash != APKTOOL_HASH:
+        e('Hash does not correspond to expected value (%s).  Terminating.' % APKTOOL_HASH, True)
+
+    # Create a temporary directory securely for us to extract the archive to.
+    tempDir = tempfile.mkdtemp()
+    tempTarFile = tempDir + '/apktool.tar.bz2'
+    print 'Hash value is verified.  Writing archive to %s...' % tempTarFile
+    hTarFile = open(tempTarFile, 'w')
+    hTarFile.write(archive)
+    hTarFile.close()
+    archive = None
+
+    # Open the archive and look at the entries inside before compressing.  Make
+    # sure that they won't end up writing files outside the target directory
+    # using relative paths.
+    hTarFile = tarfile.open(tempTarFile, 'r:bz2')
+    tarFileIsBad = False
+    for entry in hTarFile.getnames():
+        if entry.startswith('/') or entry.find('..') != -1:
+            tarFileIsBad = True
+
+    if tarFileIsBad:
+        hTarFile.close()
+        shutil.rmtree(tempDir)
+        e('The downloaded apktool archive has dangerous path names in it!  Terminating without extracting.', True)
+
+    # Extract all the entries in the archive.
+    print 'Extracting archive to temporary directory...'
+    hTarFile.extractall(tempDir)
+    hTarFile.close()
+
+    # Look for the jar file.  There should only be one.
+    jarPath = None
+    for root, directory, files in os.walk(tempDir):
+        for f in files:
+            if f.endswith('.jar'):
+                jarPath = root + '/' + f
+
+    if jarPath is None:
+        e('Could not find jar file in archive.  Terminating.', True)
+
+    # Move the jar file to apktool.jar in the current directory.
+    print 'Moving apktool.jar to current directory...'
+    shutil.move(jarPath, 'apktool.jar')
+
+    # Recursively delete the temporary directory.
+    print 'Deleting temporary directory %s...' % tempDir
+    shutil.rmtree(tempDir)
+
+    print 'Done!'
 
 
 def makeAllMethodsPublic(filesWithUnhandledMethods):
@@ -127,10 +201,15 @@ def usage(exitval):
 
 # Check that the programs we need are available.
 missingTools = []
+if os.system('java -jar apktool.jar > /dev/null 2> /dev/null') == 256:
+    print 'apktool.jar was not found.  Download it? [Y/n]:',
+    yOrN = raw_input()
+    if yOrN == '' or yOrN.lower() == 'y':
+        getAPKTool()
+    else:
+        e('apktool.jar was not found, and you chose not to get it.  Download it manually at <https://code.google.com/p/android-apktool/downloads/list> and place apktool.jar in this directory.', True)
 if os.system('keytool -help > /dev/null 2> /dev/null') != 256:
     missingTools.append('keytool')
-if os.system('java -jar apktool.jar > /dev/null 2> /dev/null') != 256:
-    missingTools.append('apktool')
 if os.system('diff -v > /dev/null 2> /dev/null') != 0:
     missingTools.append('diff')
 if os.system('jarsigner > /dev/null 2> /dev/null') != 256:
