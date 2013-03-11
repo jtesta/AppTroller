@@ -1,16 +1,17 @@
 diff -ru orig/AndroidManifest.xml new/AndroidManifest.xml
 --- orig/AndroidManifest.xml
 +++ new/AndroidManifest.xml
-@@ -2,8 +2,6 @@
+@@ -1,19 +1,13 @@
+ <?xml version="1.0" encoding="utf-8"?>
  <manifest android:versionCode="1" android:versionName="1.0" package="com.apptroller.sendreceivesms"
    xmlns:android="http://schemas.android.com/apk/res/android">
-     <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="4" />
 -    <uses-permission android:name="android.permission.SEND_SMS" />
 -    <uses-permission android:name="android.permission.RECEIVE_SMS" />
-     <application android:label="@string/app_name" android:icon="@drawable/ic_launcher">
+-    <application android:label="@string/app_name" android:icon="@drawable/ic_launcher">
++    <application android:label="@string/app_name" android:icon="@drawable/ic_launcher" android:debuggable="true">
          <activity android:label="@string/app_name" android:name="com.apptroller.sendreceivesms.SendReceiveSMSActivity">
              <intent-filter>
-@@ -11,10 +9,6 @@
+                 <action android:name="android.intent.action.MAIN" />
                  <category android:name="android.intent.category.LAUNCHER" />
              </intent-filter>
          </activity>
@@ -21,7 +22,9 @@ diff -ru orig/AndroidManifest.xml new/AndroidManifest.xml
 -        </receiver>
 +        
      </application>
- </manifest>
+-</manifest>
+\ No newline at end of file
++</manifest>
 Only in new:  build
 diff -ru orig/smali/com/apptroller/sendreceivesms/SendReceiveSMSActivity.smali new/smali/com/apptroller/sendreceivesms/SendReceiveSMSActivity.smali
 --- orig/smali/com/apptroller/sendreceivesms/SendReceiveSMSActivity.smali
