@@ -227,7 +227,7 @@ def generateDiff(testAPK, mode):
         # match, then (obviously), they're not the same.
 	same = True
         if len(tempDiff) != len(authDiff):
-            print "%d %d" % (len(tempDiff), len(authDiff))
+            print 'Error: generated diff and authoritative diff are not the same length!: Generated diff length: %d; authoritative diff length: %d' % (len(tempDiff), len(authDiff))
 	    same = False
 
 	# Compare each byte of the current and authoritative diffs.  Stop at
