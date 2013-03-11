@@ -30,3 +30,6 @@ release:
 	@gpg -b $(TARFILE).bz2
 	@echo
 	@echo "Created release: $(TARFILE).bz2"
+
+clean:
+	@rm -f *~ *.pyc apktool.jar
