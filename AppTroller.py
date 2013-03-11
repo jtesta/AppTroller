@@ -47,7 +47,8 @@ def v(msg):
         print msg
 
 
-# Downloads apktool.jar and places it in the current directory.
+# Downloads apktool.jar and places it in the current directory.  Terminates
+# on error.
 def getAPKTool():
     print 'Downloading apktool...'
 
@@ -114,7 +115,7 @@ def getAPKTool():
     print 'Deleting temporary directory %s...' % tempDir
     shutil.rmtree(tempDir)
 
-    print 'Done!'
+    print "\nDone!  apktool.jar downloaded successfully.\n"
 
 
 def makeAllMethodsPublic(filesWithUnhandledMethods):
