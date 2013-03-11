@@ -813,7 +813,7 @@ v('Done.')
 
 if keepDiff is not None:
     v('Moving diff file from %s/diff.txt to %s...' % (topTempDir, keepDiff))
-    os.rename('%s/diff.txt' % topTempDir, '%s' % keepDiff)
+    shutil.move('%s/diff.txt' % topTempDir, '%s' % keepDiff)
 
     # Set the keep flag to false so that the dir is deleted below.
     keepFlag = False
