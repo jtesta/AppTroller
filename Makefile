@@ -1,5 +1,5 @@
 THEDATE=`date +"%B %d, %Y"`
-VERSION=0.02
+VERSION=0.03
 TARFILE=AppTroller_v$(VERSION).tar
 
 all:
@@ -32,4 +32,4 @@ release:
 	@echo "Created release: $(TARFILE).bz2"
 
 clean:
-	@rm -f *~ *.pyc apktool.jar
+	@rm -f *~ *.pyc apktool.jar unit_tests/*.failed
