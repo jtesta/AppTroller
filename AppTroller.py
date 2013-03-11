@@ -18,6 +18,9 @@ from ShimReflection import *
 APPTROLLER_VERSION = '0.03'
 APPTROLLER_DATE = 'January 3, 2013'
 
+
+# The URL and hash of the current apktool.  These are used for automatically
+# downloading and installing to the current directory.
 APKTOOL_URL = 'https://android-apktool.googlecode.com/files/apktool1.5.2.tar.bz2'
 APKTOOL_HASH = '2dd828cf79467730c7406aa918f1da1bd21aaec8'
 
@@ -202,7 +205,7 @@ def usage(exitval):
 
 # Check that the programs we need are available.
 missingTools = []
-if os.system('java -jar apktool.jar > /dev/null 2> /dev/null') == 256:
+if not os.path.exists('apktool.jar'):
     print 'apktool.jar was not found.  Download it? [Y/n]:',
     yOrN = raw_input()
     if yOrN == '' or yOrN.lower() == 'y':
