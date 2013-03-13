@@ -1,4 +1,6 @@
 * Test on Windows
+* Remove old unused code.
+* Some shim functions put smali files in each directory where a used permission was found.  Instead, place one smali file in a global location and refer to it.
 
 Contacts:
   * Create subclass of CursorLoader.
