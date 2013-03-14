@@ -164,10 +164,9 @@ def makeAllMethodsPublic(filesWithUnhandledMethods):
 
 
 
-#def checkKeyStore():
+# Makes a keystore to sign the trolled app.  Each app needs to be signed with
+# a unique key, otherwise Android will give them all the same UID.
 def makeKeyStore(path):
-    #if not os.path.exists('umadbro.keystore'):
-    #print 'Keystore not found.  Generating...'
     v('Generating keystore... ',)
 
     stdDestination = subprocess.PIPE
@@ -563,7 +562,6 @@ for root, dirs, files in os.walk(tempDir): # + '/smali'):
                 if sline.startswith('.locals '):
                     nextFreeVar = int(sline[8:])
                     lastDotLocalsIndex = i
-                    #print '.locals: [%s][%d]' % (sline, nextFreeVar)
 
                 if sline.startswith('const'):
                     tline = sline.strip()
@@ -571,13 +569,8 @@ for root, dirs, files in os.walk(tempDir): # + '/smali'):
                     endPos = tline.find(',', startPos)
                     var = tline[startPos:endPos]
                     val = tline[endPos+2:]
-                    #print "X: [%s|%s]" % (var, val)
                     variableValues[var] = val
 
-
-
-                #if sline.startswith(':'):
-                #    labels[sline] = i
 
                 # If this is an invoke- call, lets see if we need to intercept
                 # the function...
@@ -605,7 +598,6 @@ for root, dirs, files in os.walk(tempDir): # + '/smali'):
                     # be removed; no substitution necessary.  This is used
                     # to remove callback registrations.
                     if subVal == '[DELETE]':
-                        #print "Deleting this line..."
                         lines[ i ] = ''
                         modified = True
 
@@ -630,7 +622,6 @@ for root, dirs, files in os.walk(tempDir): # + '/smali'):
 
                             # Skip over empty lines, labels, and catch lines.
                             if (line != '') and (not line.startswith(':')) and (not line.startswith('.catch')):
-                            #if line.strip() != '':
                                 break
 
                         # We parse out the variable name in the subsequent
@@ -676,8 +667,6 @@ for root, dirs, files in os.walk(tempDir): # + '/smali'):
                                 modifiedFlag = ShimReflection.shim(dedicatedDir, 'com/apptroller', lines, i, googleAccount)
 
                             modified = modified or modifiedFlag
-                            #print lines
-                            #sys.exit(1)
 
 
                     # Check if theres a function in use that we don't handle,
@@ -687,7 +676,6 @@ for root, dirs, files in os.walk(tempDir): # + '/smali'):
                         if sline.find(function) != -1:
                             e('Found function that we\'re not handling!: %s (in %s)' % (function, smaliPath), False)
 
-                #code = code + line
                 i = i + 1
 
             if modified:
@@ -697,8 +685,6 @@ for root, dirs, files in os.walk(tempDir): # + '/smali'):
                 hSmali = open(smaliPath, 'w')
                 hSmali.write(''.join(lines))
                 hSmali.close()
-            #else:
-            #    print '    Not modified: %s' % smaliPath
             processedFiles.append(smaliPath)
 
 
@@ -723,8 +709,6 @@ for line in iter(manifestXML.splitlines()):
 
     if removeIt == False:
         newManifestXML += line + "\n"
-#hManifest.close()
-#print ''
 
 # A block of XML needs to be removed if we're neutering RECEIVE_SMS.
 if receive_sms:
@@ -738,7 +722,6 @@ if enableDebug:
     appStart = newManifestXML.find('<application ')
     appEnd = newManifestXML.find('>', appStart)
     appLine = newManifestXML[appStart:appEnd]
-    #print 'APPLINE: [%s]' % appLine
     
     # Find the "debuggable" attribute value, and change it to true if necessary
     newAppLine = ''
@@ -746,18 +729,15 @@ if enableDebug:
     if debugStart != -1:
         debugEnd = appLine.find('"', debugStart + 21)
         debugVal = appLine[debugStart + 20:debugEnd]
-        #print "DV: [%s]" % debugVal
 
         # Debugging is explicitly set to false, so we'll change that to true.
         if debugVal == 'false':
             newAppLine = appLine[:debugStart + 20] + 'true' + appLine[debugEnd:]
-            #print "NAL: [%s]" % newAppLine
 
     else: # The debuggable attribute was not explicitly set, so we'll set it...
         newAppLine = appLine + ' android:debuggable="true"'
 
     newManifestXML = newManifestXML[:appStart] + newAppLine + newManifestXML[appEnd:]
-    #print "NEW MANIFEST: [%s]" % newManifestXML
 
 
 
@@ -768,7 +748,6 @@ else:
 
 
 hManifest = open(tempDir + '/AndroidManifest.xml', 'w')
-#print newManifestXML
 hManifest.write(newManifestXML)
 hManifest.close()
 v('Done modifying manifest file.')
