@@ -4,6 +4,7 @@
 * Replace use of external 'diff' command with built-in difflib module.
 * Split random data generation from AppTroller.py.
 * Randomize inputs for key store generation.
+* Make AppTroller.py into a class.
 
 Contacts:
   * Create subclass of CursorLoader.
