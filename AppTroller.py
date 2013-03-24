@@ -3,7 +3,6 @@ AppTroller.py
 Copyright (C) 2012, 2013 Joe Testa <jtesta@positronsecurity.com>
 
 This script trolls Android apps.  Hard.
-
 '''
 
 import getopt, hashlib, os, random, re, shutil, string, struct, subprocess, sys, tarfile, tempfile, urllib2
@@ -203,31 +202,6 @@ def usage(exitval):
     sys.exit(exitval)
 
 
-# Check that the programs we need are available.
-missingTools = []
-if not os.path.exists('apktool.jar'):
-    print 'apktool.jar was not found.  Download it? [Y/n]:',
-    yOrN = raw_input()
-    if yOrN == '' or yOrN.lower() == 'y':
-        getAPKTool()
-    else:
-        e('apktool.jar was not found, and you chose not to get it.  Download it manually at <https://code.google.com/p/android-apktool/downloads/list> and place apktool.jar in this directory.', True)
-if os.system('keytool -help > /dev/null 2> /dev/null') != 256:
-    missingTools.append('keytool')
-if os.system('diff -v > /dev/null 2> /dev/null') != 0:
-    missingTools.append('diff')
-if os.system('jarsigner > /dev/null 2> /dev/null') != 256:
-    missingTools.append('jarsigner')
-if os.system('zipalign > /dev/null 2> /dev/null') != 512:
-    missingTools.append('zipalign')
-
-# If anything is missing, print out the list and halt.
-if len(missingTools) > 0:
-    e("The following tools are missing from your path:\n\t%s\n" % "\n\t".join(missingTools), True)
-
-if not IconMerger.hasPrerequisites():
-    e('The \'identify\' and/or \'convert\' tools from ImageMagick were not found.  As a result, application icons cannot be modified.  To install on a Debian-like system, use: \'sudo apt-get install imagemagick\'', False)
-
 
 opts = None
 args = None
@@ -280,6 +254,35 @@ outputAPK = args[1]
 
 if not os.path.exists(originalAPK):
     e('Original APK not found: %s' % originalAPK, True)
+
+
+
+# Check that the programs we need are available.
+missingTools = []
+if not os.path.exists('apktool.jar'):
+    print 'apktool.jar was not found.  Download it? [Y/n]:',
+    yOrN = raw_input()
+    if yOrN == '' or yOrN.lower() == 'y':
+        getAPKTool()
+    else:
+        e('apktool.jar was not found, and you chose not to get it.  Download it manually at <https://code.google.com/p/android-apktool/downloads/list> and place apktool.jar in this directory.', True)
+if os.system('keytool -help > /dev/null 2> /dev/null') != 256:
+    missingTools.append('keytool')
+if os.system('diff -v > /dev/null 2> /dev/null') != 0:
+    missingTools.append('diff')
+if os.system('jarsigner > /dev/null 2> /dev/null') != 256:
+    missingTools.append('jarsigner')
+if os.system('zipalign > /dev/null 2> /dev/null') != 512:
+    missingTools.append('zipalign')
+
+# If anything is missing, print out the list and halt.
+if len(missingTools) > 0:
+    e("The following tools are missing from your path:\n\t%s\n" % "\n\t".join(missingTools), True)
+
+iconMerger = IconMerger(verbose, debug)
+if not iconMerger.hasPrerequisites():
+    e('The \'identify\' and/or \'convert\' tools from ImageMagick were not found.  As a result, application icons cannot be modified.  To install on a Debian-like system, use: \'sudo apt-get install imagemagick\'', False)
+
 
 
 hConfig = open(configFile, 'r')
@@ -762,7 +765,7 @@ v('Done modifying manifest file.')
 
 # TODO: don't call hasPrerequisites() again; store its first call result into
 # a variable.
-if modifyIcon and IconMerger.hasPrerequisites():
+if modifyIcon and iconMerger.hasPrerequisites():
 
     # Extract the <application> element...
     appStart = newManifestXML.find('<application ')
@@ -774,9 +777,9 @@ if modifyIcon and IconMerger.hasPrerequisites():
     if iconStart != -1:
         iconEnd = appLine.find('"', iconStart + 24)
         iconValue = appLine[iconStart + 24:iconEnd]
-        print 'ICON VALUE: [%s]' % iconValue
+        d('Icon filename in manifest: [%s]' % iconValue)
 
-        if not IconMerger.addTrollFace(tempDir, iconValue):
+        if not iconMerger.addTrollFace(tempDir, iconValue):
             e('Error while modifying application\'s icon!', False)
 
     else:
