@@ -7,6 +7,7 @@ This script trolls Android apps.  Hard.
 '''
 
 import getopt, hashlib, os, random, re, shutil, string, struct, subprocess, sys, tarfile, tempfile, urllib2
+from IconMerger import *
 from PostProcessor import *
 from ShimDynamicPermissionCheck import *
 from ShimExec import *
@@ -222,7 +223,10 @@ if os.system('zipalign > /dev/null 2> /dev/null') != 512:
 
 # If anything is missing, print out the list and halt.
 if len(missingTools) > 0:
-    e("the following tools are missing from your path:\n\t%s\n" % "\n\t".join(missingTools), True)
+    e("The following tools are missing from your path:\n\t%s\n" % "\n\t".join(missingTools), True)
+
+if not IconMerger.hasPrerequisites():
+    e('The \'identify\' and/or \'convert\' tools from ImageMagick were not found.  As a result, application icons cannot be modified.  To install on a Debian-like system, use: \'sudo apt-get install imagemagick\'', False)
 
 
 opts = None
@@ -300,6 +304,7 @@ write_contacts = False
 get_accounts = False
 googleAccount = ''
 enableDebug = False
+modifyIcon = False
 for line in hConfig:
     line = line.strip()
     if (line is not '') and (not line.startswith('#')):
@@ -352,8 +357,10 @@ for line in hConfig:
             neuteredPermissions.append('android.permission.GET_ACCOUNTS')
         elif key == 'google_account':
             googleAccount = escapeStr(value)
-        elif key == 'enable_debug':
+        elif key == 'enable_debug' and lvalue == 'enabled':
             enableDebug = True
+        elif key == 'modify_icon' and lvalue == 'enabled':
+            modifyIcon = True
 
 
 hConfig.close()
@@ -751,6 +758,31 @@ hManifest = open(tempDir + '/AndroidManifest.xml', 'w')
 hManifest.write(newManifestXML)
 hManifest.close()
 v('Done modifying manifest file.')
+
+
+# TODO: don't call hasPrerequisites() again; store its first call result into
+# a variable.
+if modifyIcon and IconMerger.hasPrerequisites():
+
+    # Extract the <application> element...
+    appStart = newManifestXML.find('<application ')
+    appEnd = newManifestXML.find('>', appStart)
+    appLine = newManifestXML[appStart:appEnd]
+    
+    # Extract the "icon" attribute value...
+    iconStart = appLine.find('android:icon="@drawable/')
+    if iconStart != -1:
+        iconEnd = appLine.find('"', iconStart + 24)
+        iconValue = appLine[iconStart + 24:iconEnd]
+        print 'ICON VALUE: [%s]' % iconValue
+
+        if not IconMerger.addTrollFace(tempDir, iconValue):
+            e('Error while modifying application\'s icon!', False)
+
+    else:
+        e('Could not find icon value in: [%s]' % appLine, False)
+        
+
 
 
 tempAPK = topTempDir + '/temp.apk'
