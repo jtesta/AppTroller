@@ -5,6 +5,7 @@
 * Split random data generation from AppTroller.py.
 * Randomize inputs for key store generation.
 * Make AppTroller.py into a class.
+* Replace all print statements with e(), d(), or v().
 
 Contacts:
   * Create subclass of CursorLoader.
