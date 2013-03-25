@@ -495,7 +495,6 @@ filesWithUnhandledMethods = []
 
 nativeLibraryFound = False
 for root, dirs, files in os.walk(tempDir): # + '/smali'):
-    #print 'Stuff: %s %s %s' % (root, dirs, files)
     for f in files:
         if f.endswith('.so'):
             nativeLibraryFound = True
@@ -516,11 +515,8 @@ for root, dirs, files in os.walk(tempDir): # + '/smali'):
             freeGotoIndex = 0
 
             catchBlocks = []
-            #labels = {}
 
             while i < len(lines):
-            #for i in range(0, len(lines)):
-                #print "i: %d" % i
                 line = lines[ i ]
 
                 # Count the whitespace before the code starts in this line.
@@ -541,7 +537,6 @@ for root, dirs, files in os.walk(tempDir): # + '/smali'):
                         classPackage = '/'
                     else:
                         classPackage = sline[pos1+1:pos2]
-                    #print "Class package: [%s]" % classPackage
 
 
                 #if reflectionFound and sline.startswith('.method') and sline.find('<init>') == -1 and line.find('<clinit>') == -1:
@@ -597,15 +592,6 @@ for root, dirs, files in os.walk(tempDir): # + '/smali'):
                         lines[ i ] = ''
                         modified = True
 
-                    # If the target function's value in the dictionary is itself
-                    # a dictionary, then we take this to mean that the function
-                    # should be deleted if certain 
-                    #elif type(subVal) is dict:
-                    #    functionVariableNames = parseFunctionArgs(sline)
-                    #    if CONDITIONAL_DELETE_ARG_1 in subVal:
-                    #        if variableValues[functionVariableNames[0]] in subVal[CONDITIONAL_DELETE_ARG_1]:
-                    #            lines[ i ] = ''
-                    #            modified = True
 
                     # If we found a value to substitute...
                     elif subVal is not None:
