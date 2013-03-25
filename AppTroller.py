@@ -5,9 +5,10 @@ Copyright (C) 2012, 2013 Joe Testa <jtesta@positronsecurity.com>
 This script trolls Android apps.  Hard.
 '''
 
-import getopt, hashlib, os, random, re, shutil, string, struct, subprocess, sys, tarfile, tempfile, urllib2
+import getopt, hashlib, os, random, re, shutil, subprocess, sys, tarfile, tempfile, urllib2
 from IconMerger import *
 from PostProcessor import *
+from RandomInfoGenerator import *
 from ShimDynamicPermissionCheck import *
 from ShimExec import *
 from ShimReadContacts import *
@@ -166,6 +167,8 @@ def makeAllMethodsPublic(filesWithUnhandledMethods):
 
 # Makes a keystore to sign the trolled app.  Each app needs to be signed with
 # a unique key, otherwise Android will give them all the same UID.
+#
+# TODO: randomize key alias and password?
 def makeKeyStore(path):
     v('Generating keystore... ',)
 
@@ -173,10 +176,12 @@ def makeKeyStore(path):
     if verbose:
         stdDestination = None
 
+    randomName = RandomInfoGenerator.getFirstLastName()
+    cityState = RandomInfoGenerator.getCityState()
+
     p = subprocess.Popen(['keytool', '-genkey', '-keystore', path, '-alias', 'lol', '-keyalg', 'RSA', '-keysize', '2048', '-validity', '10000', '-storepass', 'abcdef'], stdin=subprocess.PIPE, stdout=stdDestination, stderr=stdDestination, close_fds=True)
-    p.communicate("Mike Hunt\nu mad bro?\nlol\nRochester\nNY\nUS\nyes\n\n")
+    p.communicate("%s\n\n\n%s\n%s\nUS\nyes\n\n" % (randomName, cityState[0], cityState[1]))
     p.wait()
-    #print 'Done.'
     v("\nDone generating keystore.")
 
 
@@ -368,44 +373,27 @@ for line in hConfig:
 
 hConfig.close()
 
-
-# Pad the line_number until we have at least 11 digits.  We're too good to use
-# the standard rand() function.... because hey... what if someone uses our
-# phone number as cryptographic key material?  :P
-while len(line_number) < 11:
-    bytes = os.urandom(8)
-    line_number = line_number + str(struct.unpack('BBBBBBBB', bytes)[0])
-
-# If the number is too big, trim it so its exactly 11 digits.
-if len(line_number) > 11:
-    line_number = line_number[:11]
+# Generate a random phone number, if one was not fully provided.
+line_number = RandomInfoGenerator.getLineNumber(line_number)
 
 # If the device_id is not set, we will generate a random 15 digit IMSI-looking
 # value.
 if device_id == '':
-    while len(device_id) < 15:
-        bytes = os.urandom(8)
-        device_id = device_id + str(struct.unpack('BBBBBBBB', bytes)[0])
-    if len(device_id) > 15:
-        device_id = device_id[:15]
+    device_id = RandomInfoGenerator.getDeviceID()
 
+# TODO: what is a good software version?
 if device_software_version == '':
     device_software_version = '0'
 
+# Get a random SIM serial number.
 if sim_serial_number == '':
-    while len(sim_serial_number) < 20:
-        bytes = os.urandom(8)
-        sim_serial_number = sim_serial_number + str(struct.unpack('BBBBBBBB', bytes)[0])
-    if len(sim_serial_number) > 20:
-        sim_serial_number = sim_serial_number[:20]
+    RandomInfoGenerator.getSIMSerialNumber()
 
+# Get a random subscriber ID.
 if subscriber_id == '':
-    while len(subscriber_id) < 16:
-        bytes = os.urandom(8)
-        subscriber_id = subscriber_id + str(struct.unpack('BBBBBBBB', bytes)[0])
-    if len(subscriber_id) > 16:
-        subscriber_id = subscriber_id[:16]
+    subscriber_id = RandomInfoGenerator.getSubscriberID()
 
+# TODO: what is a common value for this?
 if voicemail_alpha_tag == '':
     voicemail_alpha_tag = 'Voice Mail'
 
@@ -413,9 +401,7 @@ if voicemail_number == '':
     voicemail_number = '+' + line_number
 
 if googleAccount == '':
-    letters = ''.join(random.choice(string.ascii_lowercase) for x in range(8))
-    numbers = ''.join(random.choice(string.digits) for x in range(3))
-    googleAccount = '%s%s@gmail.com' % (letters, numbers)
+    googleAccount = RandomInfoGenerator.getGoogleAccount()
 
 
 # If we're supposed to neuter the READ_PHONE_STATE calls.
