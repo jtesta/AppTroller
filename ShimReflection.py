@@ -39,5 +39,5 @@ class ShimReflection:
     def writeCode(codeDir):
         destinationFile = '%s/LolReflect.smali' % codeDir
         if not os.path.exists(destinationFile):
-            shutil.copyfile('LolReflect.smali', destinationFile)
+            shutil.copyfile('smali/LolReflect.smali', destinationFile)
         return

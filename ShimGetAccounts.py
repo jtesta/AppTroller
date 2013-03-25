@@ -46,7 +46,7 @@ class ShimGetAccounts:
 
         lolAccountPath = '%s/LolAccount.smali' % codeDir
         if not os.path.exists(lolAccountPath):
-            hSmaliCode = open('ShimGetAccounts_LolAccount.smali', 'r')
+            hSmaliCode = open('smali/ShimGetAccounts_LolAccount.smali', 'r')
             smaliCode = hSmaliCode.read()
             hSmaliCode.close()
 
@@ -60,7 +60,7 @@ class ShimGetAccounts:
 
         lolAccountPath = '%s/LolAccountManagerFutureBoolean.smali' % codeDir
         if not os.path.exists(lolAccountPath):
-            hSmaliCode = open('ShimGetAccounts_LolAccountManagerFutureBoolean.smali', 'r')
+            hSmaliCode = open('smali/ShimGetAccounts_LolAccountManagerFutureBoolean.smali', 'r')
             smaliCode = hSmaliCode.read()
             hSmaliCode.close()
 
@@ -73,7 +73,7 @@ class ShimGetAccounts:
 
         lolAccountPath = '%s/LolAccountManagerFutureAccount.smali' % codeDir
         if not os.path.exists(lolAccountPath):
-            hSmaliCode = open('ShimGetAccounts_LolAccountManagerFutureAccount.smali', 'r')
+            hSmaliCode = open('smali/ShimGetAccounts_LolAccountManagerFutureAccount.smali', 'r')
             smaliCode = hSmaliCode.read()
             hSmaliCode.close()
 

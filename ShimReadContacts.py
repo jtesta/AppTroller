@@ -34,7 +34,7 @@ class ShimReadContacts:
 
         lolContactsPath = '%s/LolContacts.smali' % codeDir
         if not os.path.exists(lolContactsPath):
-            hSmaliCode = open('ShimReadContacts.smali', 'r')
+            hSmaliCode = open('smali/ShimReadContacts.smali', 'r')
             smaliCode = hSmaliCode.read()
             hSmaliCode.close()
 
