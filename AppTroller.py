@@ -756,8 +756,11 @@ if modifyIcon and iconMerger.hasPrerequisites():
 
     else:
         e('Could not find icon value in: [%s]' % appLine, False)
-        
 
+
+# If our dedicated directory is empty, lets remove it.
+if not os.listdir(dedicatedDir):
+    os.rmdir(dedicatedDir)
 
 
 tempAPK = topTempDir + '/temp.apk'
