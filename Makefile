@@ -8,7 +8,7 @@ all:
 test:	tests
 
 tests:
-	cd unit_tests && python ATUnitTests.py && cd ..
+	cd unit_tests && python ATUnitTests.py; cd ..
 
 release:
 	@sed -i "s/APPTROLLER_VERSION = '.*'/APPTROLLER_VERSION = '$(VERSION)'/g" AppTroller.py
