@@ -1,11 +1,7 @@
 * Test on Windows
-* Remove old unused code.
 * Some shim functions put smali files in each directory where a used permission was found.  Instead, place one smali file in a global location and refer to it.
 * Replace use of external 'diff' command with built-in difflib module.
-* Split random data generation from AppTroller.py.
-* Randomize inputs for key store generation.
 * Make AppTroller.py into a class.
-* Replace all print statements with e(), d(), or v().
 
 Contacts:
   * Create subclass of CursorLoader.
